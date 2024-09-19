@@ -14,7 +14,7 @@
             $register_msg = "DATA SSCC INSERTED";
         } else{
             $register_msg = "DATA NICE TRY";
-            echo "TRY AGAIN LATER";
+            
         }
 
     }
