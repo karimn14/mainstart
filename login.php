@@ -1,26 +1,29 @@
 <?php 
     include "service/database.php";
 
-    if ( isset($_POST['submit'])) {
+    session_start();
+
+    $msg = "";
+    if ( isset($_POST['login'])) {
         
         $username = $_POST['username'];
         $password = $_POST['password'];
-    
-        echo "login account succeed!";
-        echo $username . '' . $password;
+        $hash_password = hash('sha256', $password);
 
-        $sql = "SELECT * FROM accdata WHERE username=$username AND password=$password";
+        $sql = "SELECT * FROM accdata WHERE Nama='$username' AND Password='$hash_password'";
 
         $result = $db->query($sql);
 
         if ($result->num_rows > 0){
             $data = $result->fetch_assoc();
-            echo "SUCCESS CHECK" . $data["username"];
+            $_SESSION["user"] = $data["Nama"];
+            $_SESSION["is_login"] = true;
 
             header("location: dashboard.php");
         } else {
-            echo "ERROR CHECK";
+            $msg = "Invalid Username";
         }
+        $db->close();
     }
 
 ?>
@@ -41,6 +44,8 @@
 
     <h2>Login Page</h2>
 
+    <i><?= $msg ?> </i>
+
     <form class="form_acc" action="login.php" method="POST">
         <div>
             <input type="text" placeholder="username" name="username"></input>
@@ -48,7 +53,7 @@
         <div>
             <input type="password" placeholder="password" name="password"> </input>
         </div>
-        <button type="submit" name="submit">Submit</button>
+        <button type="submit" name="login">Login</button>
 
     </form>    
 

@@ -6,16 +6,25 @@
     if (isset($_POST['submit'])){
         $username = $_POST["username"];
         $password = $_POST["password"];
+        $hash_password = hash('sha256', $password);
 
-        $sql = "INSERT INTO accdata (Nama, Password) VALUES 
-        ('$username', '$password')";
+        try {
+            $sql = "INSERT INTO accdata (Nama, Password) VALUES 
+            ('$username', '$hash_password')";
 
-        if ($db->query($sql)){
-            $register_msg = "DATA SSCC INSERTED";
-        } else{
-            $register_msg = "DATA NICE TRY";
-            
+            if ($db->query($sql)){
+                $register_msg = "DATA IS INSERTED";
+            } else{
+                $register_msg = "DATA NICE TRY";
+                
+            }
+
+        }catch (mysqli_sql_exception) {
+            $register_msg = "username sudah ada";
+
         }
+        
+        $db->close();
 
     }
 ?>
